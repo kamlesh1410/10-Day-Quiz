@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10-Day Quiz Challenge - Operational Excellence</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: #0f172a; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 1: STAFF REGISTRATION & RETURNING STAFF SIGN-IN                      -->
+  <!-- ========================================================================= -->
+  <div id="page-registration" class="min-h-screen flex flex-col justify-between">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur px-6 py-4">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-lg border border-emerald-500/30 p-2">
+            10D
+          </div>
+          <div>
+            <h1 class="text-base font-bold text-white leading-tight">10-Day Quiz Challenge</h1>
+            <p class="text-xs text-slate-400">General Knowledge & Operational Excellence</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-300">Staff Portal</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Form Container -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div class="w-full max-w-2xl bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur">
+        
+        <!-- Header & Tabs -->
+        <div class="mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 w-fit">
+              Page 1 · Staff Registration
+            </span>
+
+            <div class="flex items-center gap-1 p-1 bg-slate-900 rounded-xl border border-slate-700/80 w-fit">
+              <button
+                type="button"
+                id="btn-mode-register"
+                class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 shadow-sm cursor-pointer"
+              >
+                New Registration
+              </button>
+              <button
+                type="button"
+                id="btn-mode-login"
+                class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer"
+              >
+                Returning Staff Sign-In
+              </button>
+            </div>
+          </div>
+
+          <h2 id="reg-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Select Character & Register
+          </h2>
+          <p id="reg-subtitle" class="text-xs sm:text-sm text-slate-400 mt-1">
+            First time here? Select your avatar and enter your credentials to join the 10-day challenge.
+          </p>
+        </div>
+
+        <!-- MODE 1: NEW REGISTRATION -->
+        <form id="form-register" class="space-y-6">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                1. Select Character Avatar (30 Characters)
+              </label>
+              <span id="selected-avatar-label" class="text-[11px] text-emerald-400 font-mono">
+                Selected: <strong>Bear</strong>
+              </span>
+            </div>
+
+            <!-- Avatar Grid -->
+            <div id="reg-avatar-grid" class="grid grid-cols-5 sm:grid-cols-6 gap-2 sm:gap-2.5 max-h-[200px] overflow-y-auto p-2 bg-slate-900/80 rounded-xl border border-slate-700/80 scrollbar-thin"></div>
+
+            <div id="reg-avatar-preview" class="mt-3 bg-slate-900/70 border border-slate-700/80 rounded-xl p-3 flex items-center gap-3">
+              <div id="preview-avatar-box" class="w-12 h-12 rounded-xl bg-slate-800 text-2xl flex items-center justify-center ring-2 ring-emerald-400 shadow-sm">
+                🐻
+              </div>
+              <div class="text-xs">
+                <span id="preview-avatar-name" class="font-bold text-white text-sm block">Bear</span>
+                <span class="text-emerald-400">Ready to represent your group!</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="inp-staff-id" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                2. Staff ID
+              </label>
+              <input
+                id="inp-staff-id"
+                type="text"
+                placeholder="e.g. STF-1051 or 8820"
+                required
+                class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-mono"
+              />
+            </div>
+
+            <div>
+              <label for="inp-staff-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                3. Full Name
+              </label>
+              <input
+                id="inp-staff-name"
+                type="text"
+                placeholder="e.g. Jordan Blake"
+                required
+                class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
+              />
+            </div>
+          </div>
+
+          <div id="reg-error-msg" class="hidden p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg text-xs text-rose-300"></div>
+
+          <button
+            type="submit"
+            id="btn-register-submit"
+            class="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2 text-sm tracking-wide cursor-pointer"
+          >
+            Submit & Register to Challenge →
+          </button>
+        </form>
+
+        <!-- MODE 2: RETURNING STAFF SIGN-IN -->
+        <form id="form-login" class="hidden space-y-6">
+          <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-700/80 space-y-1">
+            <span class="text-xs font-bold text-emerald-400 block">Resume Challenge on Any Device</span>
+            <p class="text-xs text-slate-400">
+              Enter your Staff ID. Your assigned team, rank, and past scores will be instantly loaded from Google Sheets.
+            </p>
+          </div>
+
+          <div>
+            <label for="inp-login-staff-id" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              Enter Your Staff ID
+            </label>
+            <input
+              id="inp-login-staff-id"
+              type="text"
+              placeholder="e.g. STF-1051 or 8820"
+              class="w-full px-3.5 py-3 bg-slate-900/90 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-mono"
+            />
+          </div>
+
+          <div id="login-error-msg" class="hidden p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg text-xs text-rose-300"></div>
+          <div id="login-success-msg" class="hidden p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs text-emerald-300"></div>
+
+          <button
+            type="submit"
+            id="btn-login-submit"
+            class="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl transition-all shadow-lg text-sm tracking-wide cursor-pointer"
+          >
+            Sign In & Open Dashboard →
+          </button>
+        </form>
+
+        <!-- Footnote -->
+        <div class="mt-6 pt-5 border-t border-slate-700/60 space-y-2 text-xs text-slate-400">
+          <div class="flex items-center justify-between">
+            <span>50 Staff Members · 10 Groups of 5 · Automated balanced drafting</span>
+            <span class="text-amber-400 font-mono">⚡ Auto-Save Active</span>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            💡 <strong>Automatic Day 2+ Recognition:</strong> On this device, returning to this link bypasses registration and directly lands on your Dashboard.
+          </p>
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="px-6 py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+      10-Day Quiz Challenge · Operations Excellence Portal
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 2: DASHBOARD & LEADERBOARD HUB                                       -->
+  <!-- ========================================================================= -->
+  <div id="page-dashboard" class="hidden min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/95 backdrop-blur px-4 sm:px-6 py-3">
+      <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+        
+        <!-- User Profile Pill -->
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="dash-user-avatar" class="w-11 h-11 rounded-xl bg-slate-800 ring-2 ring-emerald-400 flex items-center justify-center text-2xl shrink-0 shadow">
+            🐻
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 id="dash-user-name" class="text-sm sm:text-base font-bold text-white truncate">Staff Name</h2>
+              <span id="dash-user-staffid" class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">STF-1051</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+              <span id="dash-user-group" class="text-emerald-400 font-semibold truncate">Group Alpha</span>
+              <span>·</span>
+              <strong id="dash-user-points" class="text-white font-mono">0</strong> pts
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2">
+          <button id="btn-refresh-leaderboard" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 hover:text-white transition-colors cursor-pointer" title="Refresh Live Standings">
+            🔄 <span class="hidden sm:inline">Refresh</span>
+          </button>
+          <button id="btn-sign-out" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-800 bg-slate-800/60 hover:bg-rose-950/40 text-xs text-slate-400 hover:text-rose-400 transition-colors cursor-pointer">
+            Sign Out
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Dashboard Body -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- 1. Hero Challenge Window & Action Banner -->
+      <section class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="hero-day-badge" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/30">
+                Day 1 of 10 Challenge
+              </span>
+              <span id="hero-multiplier-badge" class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-700 text-slate-200">
+                1× Standard Points
+              </span>
+            </div>
+
+            <h1 class="text-xl sm:text-2xl font-black text-white">Daily Operational Challenge</h1>
+            <p id="hero-multiplier-desc" class="text-xs text-slate-400">
+              100 pts Participation Bonus + 100 pts per correct answer × Active Multiplier.
+            </p>
+
+            <!-- 10 Days Progress Bar Indicator -->
+            <div class="pt-2">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1.5">10-Day Challenge Timeline:</span>
+              <div id="timeline-days-grid" class="grid grid-cols-10 gap-1 sm:gap-1.5"></div>
+            </div>
+          </div>
+
+          <!-- Countdown & Action Button -->
+          <div class="lg:col-span-5 bg-slate-900/90 p-5 rounded-xl border border-slate-700/80 text-center lg:text-right space-y-4">
+            <div>
+              <span class="text-xs text-slate-400 block mb-1">Daily Quiz Window Closes at 23:59:</span>
+              <div id="countdown-timer-display" class="font-mono text-3xl font-extrabold text-amber-400 tracking-wider">
+                --:--:--
+              </div>
+            </div>
+
+            <div id="hero-action-container">
+              <button
+                id="btn-start-quiz"
+                class="w-full py-3.5 px-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm transition-all shadow-lg hover:shadow-emerald-500/25 cursor-pointer"
+              >
+                Start Today's Quiz →
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 2. Leaderboards Hub -->
+      <section class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-700/80">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg sm:text-xl font-bold text-white tracking-tight">🏆 Challenge Standings</h2>
+              <span id="registered-count-badge" class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                0 Staff Registered
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Tie-Breaker: When points are tied, staff with lowest completion time ranks higher.
+            </p>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex items-center gap-1 p-1 bg-slate-900 rounded-xl border border-slate-700/80">
+            <button id="tab-btn-ind" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 cursor-pointer">
+              Individual Standings
+            </button>
+            <button id="tab-btn-grp" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer">
+              All 10 Groups
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: INDIVIDUAL STANDINGS -->
+        <div id="view-ind-standings" class="mt-6 space-y-6">
+          <!-- Top 3 Podium (Populated when 3+ staff finish) -->
+          <div id="podium-container" class="hidden grid grid-cols-3 gap-2 sm:gap-4 max-w-xl mx-auto pt-4 pb-2 items-end">
+            <!-- 2nd -->
+            <div class="flex flex-col items-center order-1 text-center">
+              <div id="podium-2-avatar" class="w-14 h-14 rounded-xl bg-slate-800 text-2xl flex items-center justify-center ring-2 ring-slate-400 shadow mb-2">🥈</div>
+              <span id="podium-2-name" class="text-xs font-bold text-white truncate max-w-[100px] block">2nd Name</span>
+              <span id="podium-2-pts" class="text-xs font-mono font-bold text-slate-300">0 pts</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-900 rounded-t-lg mt-2 border-t-2 border-slate-400 flex items-center justify-center text-xs font-black text-slate-300">2nd</div>
+            </div>
+            <!-- 1st -->
+            <div class="flex flex-col items-center order-2 text-center">
+              <div id="podium-1-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800 text-3xl flex items-center justify-center ring-4 ring-amber-400 shadow mb-2">🥇</div>
+              <span id="podium-1-name" class="text-xs sm:text-sm font-extrabold text-white truncate max-w-[120px] block">Champion</span>
+              <span id="podium-1-pts" class="text-xs sm:text-sm font-mono font-bold text-amber-300">0 pts</span>
+              <div class="w-full h-24 sm:h-28 bg-gradient-to-t from-slate-900 to-amber-950/40 rounded-t-lg mt-2 border-t-2 border-amber-400 flex items-center justify-center text-xs font-black text-amber-300">1st</div>
+            </div>
+            <!-- 3rd -->
+            <div class="flex flex-col items-center order-3 text-center">
+              <div id="podium-3-avatar" class="w-12 h-12 rounded-xl bg-slate-800 text-2xl flex items-center justify-center ring-2 ring-amber-700 shadow mb-2">🥉</div>
+              <span id="podium-3-name" class="text-xs font-bold text-white truncate max-w-[100px] block">3rd Name</span>
+              <span id="podium-3-pts" class="text-xs font-mono font-bold text-slate-300">0 pts</span>
+              <div class="w-full h-12 sm:h-16 bg-slate-900 rounded-t-lg mt-2 border-t border-amber-700 flex items-center justify-center text-xs font-bold text-amber-500">3rd</div>
+            </div>
+          </div>
+
+          <!-- Scrollable Table -->
+          <div class="overflow-x-auto overflow-y-auto max-h-[480px] rounded-xl border border-slate-700/80 scrollbar-thin">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-900/95 sticky top-0 text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-700">
+                <tr>
+                  <th class="py-3 px-4">Rank</th>
+                  <th class="py-3 px-4">Staff Member</th>
+                  <th class="py-3 px-4">Group</th>
+                  <th class="py-3 px-4 text-center">Progress</th>
+                  <th class="py-3 px-4 text-center">Total Time</th>
+                  <th class="py-3 px-4 text-right">Total Points</th>
+                </tr>
+              </thead>
+              <tbody id="table-staff-body" class="divide-y divide-slate-800/60 font-medium"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: GROUP STANDINGS -->
+        <div id="view-grp-standings" class="hidden mt-6">
+          <div id="group-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900/95 px-6 py-4 text-xs text-slate-500 text-center">
+      10-Day Quiz Challenge · Operations Excellence
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PAGE 3: INTERACTIVE QUIZ ENGINE                                           -->
+  <!-- ========================================================================= -->
+  <div id="page-quiz" class="hidden min-h-screen flex flex-col justify-between">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur px-6 py-4">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span id="quiz-badge-day" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/30">
+            Day 1 of 10 Challenge
+          </span>
+          <span id="quiz-badge-mult" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/30">
+            1× Standard
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <!-- Real-Time Speed Stopwatch -->
+          <div class="flex items-center gap-1.5 font-mono text-sm text-amber-300 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+            <span>⏱️</span>
+            <span id="quiz-stopwatch-display">00:00</span>
+          </div>
+          <button id="btn-cancel-quiz" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded border border-slate-800 cursor-pointer">
+            Exit
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Question Arena -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      
+      <!-- State A: Active Question View -->
+      <div id="quiz-active-card" class="w-full max-w-2xl bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur">
+        <div class="flex items-center justify-between mb-4">
+          <span id="quiz-counter-text" class="text-xs font-bold text-slate-400 uppercase">Question 1 of 5</span>
+          <span class="text-xs font-mono text-emerald-400">100 pts per correct answer</span>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full bg-slate-900 h-1.5 rounded-full mb-6 overflow-hidden">
+          <div id="quiz-progress-bar" class="bg-emerald-500 h-full transition-all duration-300 w-1/5"></div>
+        </div>
+
+        <h2 id="quiz-question-prompt" class="text-xl sm:text-2xl font-bold text-white leading-snug mb-6">
+          Question text loading...
+        </h2>
+
+        <!-- Options Container -->
+        <div id="quiz-options-list" class="space-y-3"></div>
+
+        <!-- Feedback & Next Button -->
+        <div id="quiz-feedback-box" class="hidden mt-6 pt-5 border-t border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div id="quiz-feedback-text" class="text-sm font-bold"></div>
+          <button
+            id="btn-next-question"
+            class="w-full sm:w-auto px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs tracking-wide cursor-pointer"
+          >
+            Next Question →
+          </button>
+        </div>
+      </div>
+
+      <!-- State B: Daily Completion Screen -->
+      <div id="quiz-complete-card" class="hidden w-full max-w-xl bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+        <div>
+          <div class="text-5xl mb-2">🏆</div>
+          <h2 class="text-2xl font-black text-white">Daily Quiz Completed!</h2>
+          <p class="text-xs text-slate-400 mt-1">Your response has been logged and points credited.</p>
+        </div>
+
+        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800">
+          <span class="text-xs uppercase text-slate-400 font-semibold tracking-wider">Total Points Earned Today</span>
+          <div id="res-total-score" class="text-4xl sm:text-5xl font-mono font-black text-emerald-400 my-2">+600 pts</div>
+          <div class="text-xs text-emerald-300">Credited to <strong id="res-group-name">Group Alpha</strong></div>
+        </div>
+
+        <div class="text-left text-xs bg-slate-900/60 p-4 rounded-xl space-y-2.5 text-slate-300 border border-slate-800">
+          <div class="flex justify-between"><span>Participation Baseline:</span><span class="font-mono text-white">+100 pts</span></div>
+          <div class="flex justify-between"><span>Accuracy Score:</span><span id="res-correct-breakdown" class="font-mono text-white">5 correct (+500 pts)</span></div>
+          <div class="flex justify-between text-amber-400 font-bold"><span>Active Day Multiplier:</span><span id="res-mult-applied" class="font-mono">1×</span></div>
+          <div class="flex justify-between text-amber-300 font-bold"><span>Total Time Logged:</span><span id="res-time-applied" class="font-mono">00:45</span></div>
+          <div class="flex justify-between text-emerald-400 font-bold pt-2 border-t border-slate-800 text-sm">
+            <span>Final Credited:</span><span id="res-final-points" class="font-mono">600 pts</span>
+          </div>
+        </div>
+
+        <button
+          id="btn-finish-return"
+          class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/25"
+        >
+          Return to Dashboard & View Standings →
+        </button>
+      </div>
+
+    </main>
+
+    <footer class="p-3 text-center text-xs text-slate-500 border-t border-slate-800">
+      10-Day Quiz Challenge · Speed & Accuracy System
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- APPLICATION SCRIPT LOGIC (VANILLA JS, GAS INTEGRATION, NO RETAKE)         -->
+  <!-- ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      // --- CONFIGURATION & TEAMS ---
+      const STORAGE_KEYS = {
+        CURRENT_USER: 'quiz_challenge_current_user',
+        ALL_STAFF: 'quiz_challenge_all_staff',
+      };
+
+      const TEAMS = [
+        'Group Alpha', 'Group Bravo', 'Group Charlie', 'Group Delta', 'Group Echo',
+        'Group Foxtrot', 'Group Golf', 'Group Hotel', 'Group India', 'Group Juliet'
+      ];
+
+      const MULTIPLIERS = {
+        1: { phase: 1, name: 'Standard Points', multiplier: 1, maxDaily: 600, badge: 'bg-slate-700 text-slate-200' },
+        2: { phase: 1, name: 'Standard Points', multiplier: 1, maxDaily: 600, badge: 'bg-slate-700 text-slate-200' },
+        3: { phase: 1, name: 'Standard Points', multiplier: 1, maxDaily: 600, badge: 'bg-slate-700 text-slate-200' },
+        4: { phase: 1, name: 'Standard Points', multiplier: 1, maxDaily: 600, badge: 'bg-slate-700 text-slate-200' },
+        5: { phase: 2, name: '2× Double Points', multiplier: 2, maxDaily: 1200, badge: 'bg-amber-500/20 text-amber-400 border border-amber-500/30' },
+        6: { phase: 2, name: '2× Double Points', multiplier: 2, maxDaily: 1200, badge: 'bg-amber-500/20 text-amber-400 border border-amber-500/30' },
+        7: { phase: 2, name: '2× Double Points', multiplier: 2, maxDaily: 1200, badge: 'bg-amber-500/20 text-amber-400 border border-amber-500/30' },
+        8: { phase: 3, name: '4× Super Multiplier', multiplier: 4, maxDaily: 2400, badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' },
+        9: { phase: 3, name: '4× Super Multiplier', multiplier: 4, maxDaily: 2400, badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' },
+        10: { phase: 3, name: '4× Grand Finale Super', multiplier: 4, maxDaily: 2400, badge: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' },
+      };
+
+      const AVATARS = [
+        { id: 'avatar_1', name: 'Bear', emoji: '🐻' },
+        { id: 'avatar_2', name: 'Moose', emoji: '🦌' },
+        { id: 'avatar_3', name: 'Pug', emoji: '🐶' },
+        { id: 'avatar_4', name: 'Cat', emoji: '🐱' },
+        { id: 'avatar_5', name: 'Mouse', emoji: '🐭' },
+        { id: 'avatar_6', name: 'Bunny', emoji: '🐰' },
+        { id: 'avatar_7', name: 'Fox', emoji: '🦊' },
+        { id: 'avatar_8', name: 'Wolf', emoji: '🐺' },
+        { id: 'avatar_9', name: 'Raccoon', emoji: '🦝' },
+        { id: 'avatar_10', name: 'Panda', emoji: '🐼' },
+        { id: 'avatar_11', name: 'Frog', emoji: '🐸' },
+        { id: 'avatar_12', name: 'Owl', emoji: '🦉' },
+        { id: 'avatar_13', name: 'Chick', emoji: '🐥' },
+        { id: 'avatar_14', name: 'Parrot', emoji: '🦜' },
+        { id: 'avatar_15', name: 'Penguin', emoji: '🐧' },
+        { id: 'avatar_16', name: 'Yeti', emoji: '❄️' },
+        { id: 'avatar_17', name: 'Snowman', emoji: '⛄' },
+        { id: 'avatar_18', name: 'Llama', emoji: '🦙' },
+        { id: 'avatar_19', name: 'Tiger', emoji: '🐯' },
+        { id: 'avatar_20', name: 'Koala', emoji: '🐨' },
+        { id: 'avatar_21', name: 'Kangaroo', emoji: '🦘' },
+        { id: 'avatar_22', name: 'Horse', emoji: '🐴' },
+        { id: 'avatar_23', name: 'Unicorn', emoji: '🦄' },
+        { id: 'avatar_24', name: 'Dragon', emoji: '🐉' },
+        { id: 'avatar_25', name: 'Monster', emoji: '👾' },
+        { id: 'avatar_26', name: 'Pinky', emoji: '🌸' },
+        { id: 'avatar_27', name: 'Brain', emoji: '🧠' },
+        { id: 'avatar_28', name: 'Zombie', emoji: '🧟' },
+        { id: 'avatar_29', name: 'Skeleton', emoji: '💀' },
+        { id: 'avatar_30', name: 'Earth', emoji: '🌍' },
+      ];
+
+      // --- APP STATE ---
+      let currentUser = null;
+      let activeDay = 1;
+      let selectedAvatarId = 'avatar_1';
+      let leaderboardData = { individuals: [], groups: [], allIndividuals: [] };
+
+      // Quiz runtime
+      let quizQuestions = [];
+      let quizCurrentIndex = 0;
+      let quizCorrectCount = 0;
+      let quizTimerSeconds = 0;
+      let quizTimerInterval = null;
+
+      // --- GAS BACKEND ADAPTER ---
+      const isRunningInGas = (typeof google !== 'undefined' && google.script && google.script.run);
+
+      function callGas(functionName, args, onSuccess, onError) {
+        if (isRunningInGas) {
+          let runner = google.script.run
+            .withSuccessHandler(onSuccess)
+            .withFailureHandler(onError || console.error);
+          runner[functionName].apply(runner, args);
+        } else {
+          // Fallback to local evaluation
+          onError && onError('Standalone mode');
+        }
+      }
+
+      // --- TIME HELPERS ---
+      function formatSeconds(secs) {
+        const s = Math.max(0, Math.floor(secs || 0));
+        const m = Math.floor(s / 60);
+        const rem = s % 60;
+        return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+      }
+
+      function updateMidnightCountdown() {
+        const now = new Date();
+        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        let diff = Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
+        const h = Math.floor(diff / 3600);
+        diff %= 3600;
+        const m = Math.floor(diff / 60);
+        const s = diff % 60;
+        const el = document.getElementById('countdown-timer-display');
+        if (el) {
+          el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+      }
+      setInterval(updateMidnightCountdown, 1000);
+      updateMidnightCountdown();
+
+      // --- NAVIGATION ---
+      function showPage(pageId) {
+        ['page-registration', 'page-dashboard', 'page-quiz'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.toggle('hidden', id !== pageId);
+        });
+      }
+
+      // --- AVATAR HELPERS ---
+      function getAvatar(id) {
+        return AVATARS.find(a => a.id === id) || AVATARS[0];
+      }
+
+      function renderAvatarGrid() {
+        const grid = document.getElementById('reg-avatar-grid');
+        if (!grid) return;
+        grid.innerHTML = AVATARS.map(a => {
+          const isSelected = a.id === selectedAvatarId;
+          return `
+            <button
+              type="button"
+              onclick="window.selectAvatar('${a.id}')"
+              class="relative p-1 rounded-xl text-center transition-all cursor-pointer ${
+                isSelected ? 'ring-2 ring-emerald-400 bg-emerald-500/20 scale-105' : 'bg-slate-800/80 hover:bg-slate-700/60'
+              }"
+            >
+              <div class="aspect-square rounded-lg flex items-center justify-center text-xl bg-slate-900 border border-slate-700">
+                ${a.emoji}
+              </div>
+              <p class="text-[10px] font-bold text-white truncate mt-1">${a.name}</p>
+            </button>
+          `;
+        }).join('');
+      }
+
+      window.selectAvatar = function (id) {
+        selectedAvatarId = id;
+        const a = getAvatar(id);
+        const label = document.getElementById('selected-avatar-label');
+        if (label) label.innerHTML = `Selected: <strong>${a.name}</strong>`;
+        const pBox = document.getElementById('preview-avatar-box');
+        if (pBox) pBox.textContent = a.emoji;
+        const pName = document.getElementById('preview-avatar-name');
+        if (pName) pName.textContent = a.name;
+        renderAvatarGrid();
+      };
+
+      // --- REGISTRATION & LOGIN ---
+      function setupRegistration() {
+        renderAvatarGrid();
+
+        const btnModeReg = document.getElementById('btn-mode-register');
+        const btnModeLogin = document.getElementById('btn-mode-login');
+        const formReg = document.getElementById('form-register');
+        const formLogin = document.getElementById('form-login');
+        const regTitle = document.getElementById('reg-title');
+        const regSub = document.getElementById('reg-subtitle');
+
+        btnModeReg.addEventListener('click', () => {
+          btnModeReg.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 shadow-sm cursor-pointer';
+          btnModeLogin.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer';
+          formReg.classList.remove('hidden');
+          formLogin.classList.add('hidden');
+          regTitle.textContent = 'Select Character & Register';
+          regSub.textContent = 'First time here? Select your avatar and enter your credentials to join the 10-day challenge.';
+        });
+
+        btnModeLogin.addEventListener('click', () => {
+          btnModeLogin.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 shadow-sm cursor-pointer';
+          btnModeReg.className = 'px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer';
+          formLogin.classList.remove('hidden');
+          formReg.classList.add('hidden');
+          regTitle.textContent = 'Welcome Back! Staff Sign-In';
+          regSub.textContent = 'Already registered on Day 1? Enter your Staff ID to resume your challenge and group standing.';
+        });
+
+        // Register submit
+        formReg.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const staffId = document.getElementById('inp-staff-id').value.trim();
+          const staffName = document.getElementById('inp-staff-name').value.trim();
+          const errEl = document.getElementById('reg-error-msg');
+          errEl.classList.add('hidden');
+
+          if (!staffId || !staffName) return;
+
+          const submitBtn = document.getElementById('btn-register-submit');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Registering & Assigning Team...';
+
+          if (isRunningInGas) {
+            callGas('registerUser', [staffId, staffName, selectedAvatarId], (res) => {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit & Register to Challenge →';
+              if (res.status === 'success') {
+                currentUser = res.user;
+                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+                openDashboard();
+              } else {
+                errEl.textContent = res.message || 'Registration failed.';
+                errEl.classList.remove('hidden');
+              }
+            }, (err) => {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit & Register to Challenge →';
+              errEl.textContent = 'Server communication error: ' + err;
+              errEl.classList.remove('hidden');
+            });
+          } else {
+            // Local fallback
+            const assignedGroup = TEAMS[Math.floor(Math.random() * TEAMS.length)];
+            currentUser = {
+              staffId: staffId,
+              staffName: staffName,
+              avatarId: selectedAvatarId,
+              groupName: assignedGroup,
+              scores: {},
+              totalPoints: 0,
+              totalTimeSeconds: 0,
+              lastCompletedDay: 0,
+            };
+            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit & Register to Challenge →';
+            openDashboard();
+          }
+        });
+
+        // Login submit
+        formLogin.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const staffId = document.getElementById('inp-login-staff-id').value.trim();
+          const errEl = document.getElementById('login-error-msg');
+          const succEl = document.getElementById('login-success-msg');
+          errEl.classList.add('hidden');
+          succEl.classList.add('hidden');
+
+          if (!staffId) return;
+
+          const submitBtn = document.getElementById('btn-login-submit');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Looking up Staff ID...';
+
+          if (isRunningInGas) {
+            callGas('findUserById', [staffId], (user) => {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Sign In & Open Dashboard →';
+              if (user) {
+                currentUser = user;
+                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+                succEl.textContent = `Welcome back, ${user.staffName}! Opening dashboard...`;
+                succEl.classList.remove('hidden');
+                setTimeout(openDashboard, 400);
+              } else {
+                errEl.textContent = `Staff ID "${staffId}" not found in sheet roster. Please register first.`;
+                errEl.classList.remove('hidden');
+              }
+            }, (err) => {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Sign In & Open Dashboard →';
+              errEl.textContent = 'Error querying sheet: ' + err;
+              errEl.classList.remove('hidden');
+            });
+          } else {
+            // Check localStorage
+            const raw = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+            if (raw) {
+              const u = JSON.parse(raw);
+              if (String(u.staffId || '').toLowerCase() === String(staffId || '').toLowerCase()) {
+                currentUser = u;
+                openDashboard();
+                return;
+              }
+            }
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In & Open Dashboard →';
+            errEl.textContent = `Staff ID "${staffId}" not found locally. Please register first.`;
+            errEl.classList.remove('hidden');
+          }
+        });
+      }
+
+      // --- DASHBOARD ENGINE ---
+      function openDashboard() {
+        if (!currentUser) return;
+
+        showPage('page-dashboard');
+
+        // Render header
+        const a = getAvatar(currentUser.avatarId);
+        document.getElementById('dash-user-avatar').textContent = a.emoji;
+        document.getElementById('dash-user-name').textContent = currentUser.staffName;
+        document.getElementById('dash-user-staffid').textContent = currentUser.staffId;
+        document.getElementById('dash-user-group').textContent = currentUser.groupName;
+        document.getElementById('dash-user-points').textContent = Number(currentUser.totalPoints || 0).toLocaleString();
+
+        // Calculate active challenge day
+        activeDay = Math.min(10, Math.max(1, (currentUser.lastCompletedDay || 0) + 1));
+
+        renderHeroDay();
+        loadLeaderboard();
+      }
+
+      function renderHeroDay() {
+        const mult = MULTIPLIERS[activeDay] || MULTIPLIERS[1];
+        document.getElementById('hero-day-badge').textContent = `Day ${activeDay} of 10 Challenge`;
+        document.getElementById('hero-multiplier-badge').textContent = mult.name;
+        document.getElementById('hero-multiplier-desc').textContent = `${mult.name}: 100 pt baseline + 100 pt accuracy bonus × ${mult.multiplier}× multiplier. (Max ${mult.maxDaily} pts today).`;
+
+        // Timeline dots
+        const timeline = document.getElementById('timeline-days-grid');
+        if (timeline) {
+          timeline.innerHTML = Array.from({ length: 10 }, (_, i) => i + 1).map(d => {
+            const isCompleted = Boolean(currentUser.scores && currentUser.scores[`Day${d}`]);
+            const isCurrent = d === activeDay;
+            return `
+              <div class="flex flex-col items-center">
+                <div class="w-full h-2 rounded-full mb-1 ${
+                  isCompleted ? 'bg-emerald-400' : isCurrent ? 'bg-amber-400 animate-pulse' : 'bg-slate-700'
+                }"></div>
+                <span class="text-[9px] font-mono ${isCurrent ? 'text-amber-300 font-bold' : 'text-slate-500'}">D${d}</span>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Action button (locked if completed)
+        const actionBox = document.getElementById('hero-action-container');
+        const alreadyDone = Boolean(currentUser.scores && currentUser.scores[`Day${activeDay}`]);
+
+        if (alreadyDone) {
+          actionBox.innerHTML = `
+            <div class="py-3 px-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-center">
+              <span class="text-xs font-bold text-emerald-400 block">✓ Day ${activeDay} Quiz Completed!</span>
+              <span class="text-[11px] text-slate-400">Score logged: ${currentUser.scores[`Day${activeDay}`]} pts. No retakes permitted. Next day opens tomorrow!</span>
+            </div>
+          `;
+        } else {
+          actionBox.innerHTML = `
+            <button
+              id="btn-start-quiz"
+              onclick="window.startDailyQuiz(${activeDay})"
+              class="w-full py-3.5 px-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm transition-all shadow-lg hover:shadow-emerald-500/25 cursor-pointer"
+            >
+              Start Day ${activeDay} Quiz →
+            </button>
+          `;
+        }
+      }
+
+      function loadLeaderboard() {
+        if (isRunningInGas) {
+          callGas('getLeaderboardData', [], (data) => {
+            if (data) {
+              leaderboardData = data;
+              renderLeaderboards();
+            }
+          });
+        } else {
+          // Local fallback
+          leaderboardData = {
+            individuals: currentUser ? [{
+              rank: 1,
+              staffId: currentUser.staffId,
+              staffName: currentUser.staffName,
+              avatarId: currentUser.avatarId,
+              groupName: currentUser.groupName,
+              totalPoints: currentUser.totalPoints,
+              totalTimeSeconds: currentUser.totalTimeSeconds,
+              lastCompletedDay: currentUser.lastCompletedDay
+            }] : [],
+            groups: TEAMS.map((t, idx) => ({
+              rank: idx + 1,
+              teamName: t,
+              aggregatePoints: t === currentUser?.groupName ? currentUser.totalPoints : 0,
+              aggregateTimeSeconds: t === currentUser?.groupName ? currentUser.totalTimeSeconds : 0,
+              memberCount: t === currentUser?.groupName ? 1 : 0,
+              members: t === currentUser?.groupName ? [{ name: currentUser.staffName, points: currentUser.totalPoints }] : []
+            }))
+          };
+          renderLeaderboards();
+        }
+      }
+
+      function renderLeaderboards() {
+        const all = leaderboardData.individuals || [];
+        document.getElementById('registered-count-badge').textContent = `${all.length} Staff Registered`;
+
+        // Podium
+        const podium = document.getElementById('podium-container');
+        if (all.length >= 3) {
+          podium.classList.remove('hidden');
+          document.getElementById('podium-1-name').textContent = all[0].staffName;
+          document.getElementById('podium-1-pts').textContent = `${all[0].totalPoints} pts`;
+          document.getElementById('podium-1-avatar').textContent = getAvatar(all[0].avatarId).emoji;
+
+          document.getElementById('podium-2-name').textContent = all[1].staffName;
+          document.getElementById('podium-2-pts').textContent = `${all[1].totalPoints} pts`;
+          document.getElementById('podium-2-avatar').textContent = getAvatar(all[1].avatarId).emoji;
+
+          document.getElementById('podium-3-name').textContent = all[2].staffName;
+          document.getElementById('podium-3-pts').textContent = `${all[2].totalPoints} pts`;
+          document.getElementById('podium-3-avatar').textContent = getAvatar(all[2].avatarId).emoji;
+        } else {
+          podium.classList.add('hidden');
+        }
+
+        // Table
+        const tbody = document.getElementById('table-staff-body');
+        if (all.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="py-12 text-center text-slate-400">
+                <p class="font-bold text-white text-sm">No Staff Registered Yet</p>
+                <p class="text-xs text-slate-500 mt-1">As staff members register on Page 1, their scores, teams, and completion times will automatically appear here live!</p>
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = all.map(m => {
+            const myId = String(currentUser?.staffId || '').toLowerCase();
+            const isMe = Boolean(currentUser && String(m?.staffId || '').toLowerCase() === myId);
+            const a = getAvatar(m.avatarId);
+            return `
+              <tr class="${isMe ? 'bg-emerald-500/15 font-bold ring-1 ring-emerald-500/40' : 'hover:bg-slate-800/40'}">
+                <td class="py-3 px-4">
+                  <span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
+                    m.rank === 1 ? 'bg-amber-400 text-slate-950 font-black' :
+                    m.rank === 2 ? 'bg-slate-300 text-slate-950 font-black' :
+                    m.rank === 3 ? 'bg-amber-700 text-white font-black' :
+                    isMe ? 'bg-emerald-500 text-slate-950 font-black' : 'text-slate-400 bg-slate-800'
+                  }">
+                    ${m.rank}
+                  </span>
+                </td>
+                <td class="py-3 px-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">${a.emoji}</span>
+                    <div>
+                      <span class="text-white block">${m.staffName} ${isMe ? '<span class="ml-1 text-[10px] text-emerald-300 bg-emerald-500/20 px-1 py-0.2 rounded border border-emerald-500/30">You</span>' : ''}</span>
+                      <span class="text-[11px] font-mono text-slate-400">${m.staffId}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-4 text-slate-300">
+                  <span class="text-xs bg-slate-900 px-2 py-0.5 rounded border border-slate-700">${m.groupName}</span>
+                </td>
+                <td class="py-3 px-4 text-center font-mono text-slate-400">${m.lastCompletedDay || 0}/10</td>
+                <td class="py-3 px-4 text-center font-mono text-amber-300 text-xs">${formatSeconds(m.totalTimeSeconds)}</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-emerald-400">${Number(m.totalPoints || 0).toLocaleString()} pts</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // Groups
+        const grpGrid = document.getElementById('group-cards-grid');
+        const groups = leaderboardData.groups || [];
+        grpGrid.innerHTML = groups.map(g => {
+          const isMyTeam = currentUser && g.teamName === currentUser.groupName;
+          return `
+            <div class="p-4 rounded-xl border transition-all ${
+              isMyTeam ? 'bg-slate-800/95 border-emerald-500/80 ring-2 ring-emerald-400/40' : 'bg-slate-900/80 border-slate-700/80'
+            }">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-white">#${g.rank}</span>
+                  <div>
+                    <h4 class="text-sm font-bold text-white">${g.teamName} ${isMyTeam ? '<span class="text-[10px] text-emerald-300 bg-emerald-500/20 px-1 py-0.2 rounded">Your Team</span>' : ''}</h4>
+                    <span class="text-[11px] text-slate-400">${g.memberCount} of 5 Staff · Time: ${formatSeconds(g.aggregateTimeSeconds)}</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="font-mono text-base font-black text-white">${Number(g.aggregatePoints || 0).toLocaleString()}</span>
+                  <span class="text-[11px] text-slate-400 block">Combined pts</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Tab switcher
+      document.getElementById('tab-btn-ind').addEventListener('click', () => {
+        document.getElementById('tab-btn-ind').className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 cursor-pointer';
+        document.getElementById('tab-btn-grp').className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer';
+        document.getElementById('view-ind-standings').classList.remove('hidden');
+        document.getElementById('view-grp-standings').classList.add('hidden');
+      });
+      document.getElementById('tab-btn-grp').addEventListener('click', () => {
+        document.getElementById('tab-btn-grp').className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 cursor-pointer';
+        document.getElementById('tab-btn-ind').className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white cursor-pointer';
+        document.getElementById('view-grp-standings').classList.remove('hidden');
+        document.getElementById('view-ind-standings').classList.add('hidden');
+      });
+
+      document.getElementById('btn-refresh-leaderboard').addEventListener('click', loadLeaderboard);
+      document.getElementById('btn-sign-out').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+        currentUser = null;
+        showPage('page-registration');
+      });
+
+      // --- QUIZ ENGINE ---
+      window.startDailyQuiz = function (day) {
+        if (!currentUser) return;
+        if (currentUser.scores && currentUser.scores[`Day${day}`]) {
+          alert('You have already completed Day ' + day + ' quiz. No retakes permitted!');
+          return;
+        }
+
+        activeDay = day;
+        quizCurrentIndex = 0;
+        quizCorrectCount = 0;
+        quizTimerSeconds = 0;
+
+        showPage('page-quiz');
+        document.getElementById('quiz-active-card').classList.remove('hidden');
+        document.getElementById('quiz-complete-card').classList.add('hidden');
+
+        const mult = MULTIPLIERS[day] || MULTIPLIERS[1];
+        document.getElementById('quiz-badge-day').textContent = `Day ${day} of 10 Challenge`;
+        document.getElementById('quiz-badge-mult').textContent = mult.name;
+
+        // Start stopwatch
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = setInterval(() => {
+          quizTimerSeconds++;
+          document.getElementById('quiz-stopwatch-display').textContent = formatSeconds(quizTimerSeconds);
+        }, 1000);
+        document.getElementById('quiz-stopwatch-display').textContent = '00:00';
+
+        // Load questions from sheet or fallback
+        if (isRunningInGas) {
+          document.getElementById('quiz-question-prompt').textContent = 'Loading Day ' + day + ' questions from spreadsheet...';
+          callGas('getDailyQuestions', [day], (questions) => {
+            if (questions && questions.length > 0) {
+              quizQuestions = questions;
+            } else {
+              quizQuestions = getFallbackQuestions(day);
+            }
+            renderQuizQuestion();
+          }, () => {
+            quizQuestions = getFallbackQuestions(day);
+            renderQuizQuestion();
+          });
+        } else {
+          quizQuestions = getFallbackQuestions(day);
+          renderQuizQuestion();
+        }
+      };
+
+      function renderQuizQuestion() {
+        if (quizCurrentIndex >= quizQuestions.length) {
+          finishQuiz();
+          return;
+        }
+
+        const q = quizQuestions[quizCurrentIndex];
+        document.getElementById('quiz-counter-text').textContent = `Question ${quizCurrentIndex + 1} of ${quizQuestions.length}`;
+        document.getElementById('quiz-progress-bar').style.width = `${((quizCurrentIndex + 1) / quizQuestions.length) * 100}%`;
+        document.getElementById('quiz-question-prompt').textContent = q.question;
+        document.getElementById('quiz-feedback-box').classList.add('hidden');
+
+        const optionsContainer = document.getElementById('quiz-options-list');
+        optionsContainer.innerHTML = q.options.map((opt, idx) => {
+          const letter = String.fromCharCode(65 + idx);
+          return `
+            <button
+              type="button"
+              onclick="window.selectQuizAnswer('${opt.replace(/'/g, "\\'")}', this)"
+              class="quiz-opt-btn w-full p-4 rounded-xl border border-slate-700 bg-slate-900/80 hover:bg-slate-700/60 text-left flex items-center justify-between text-sm transition-all cursor-pointer"
+            >
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-md bg-slate-800 text-slate-300 flex items-center justify-center font-mono font-bold text-xs border border-slate-700">${letter}</span>
+                <span class="text-white">${opt}</span>
+              </div>
+            </button>
+          `;
+        }).join('');
+      }
+
+      window.selectQuizAnswer = function (selected, btnEl) {
+        const q = quizQuestions[quizCurrentIndex];
+        const isCorrect = (selected.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase());
+
+        // Disable all buttons
+        document.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+          btn.disabled = true;
+          btn.classList.add('cursor-not-allowed', 'opacity-70');
+          const text = btn.innerText.replace(/^[A-D]\s+/, '').trim();
+          if (text.toLowerCase() === q.correctAnswer.trim().toLowerCase()) {
+            btn.className = 'quiz-opt-btn w-full p-4 rounded-xl border-2 border-emerald-400 bg-emerald-500/20 text-left flex items-center justify-between text-sm font-bold text-white';
+          }
+        });
+
+        if (isCorrect) {
+          quizCorrectCount++;
+          btnEl.className = 'quiz-opt-btn w-full p-4 rounded-xl border-2 border-emerald-400 bg-emerald-500/20 text-left flex items-center justify-between text-sm font-bold text-white';
+          document.getElementById('quiz-feedback-text').innerHTML = `<span class="text-emerald-400">✓ Correct! +100 base points earned!</span>`;
+        } else {
+          btnEl.className = 'quiz-opt-btn w-full p-4 rounded-xl border-2 border-rose-500 bg-rose-500/20 text-left flex items-center justify-between text-sm font-bold text-white';
+          document.getElementById('quiz-feedback-text').innerHTML = `<span class="text-rose-400">✗ Incorrect. Correct answer: ${q.correctAnswer}</span>`;
+        }
+
+        document.getElementById('quiz-feedback-box').classList.remove('hidden');
+      };
+
+      document.getElementById('btn-next-question').addEventListener('click', () => {
+        quizCurrentIndex++;
+        renderQuizQuestion();
+      });
+
+      document.getElementById('btn-cancel-quiz').addEventListener('click', () => {
+        clearInterval(quizTimerInterval);
+        openDashboard();
+      });
+
+      function finishQuiz() {
+        clearInterval(quizTimerInterval);
+
+        const mult = (MULTIPLIERS[activeDay] || MULTIPLIERS[1]).multiplier;
+        const baseBonus = 100;
+        const accuracyBonus = quizCorrectCount * 100;
+        const totalScore = (baseBonus + accuracyBonus) * mult;
+
+        // UI Breakdown
+        document.getElementById('quiz-active-card').classList.add('hidden');
+        document.getElementById('quiz-complete-card').classList.remove('hidden');
+
+        document.getElementById('res-total-score').textContent = `+${totalScore} pts`;
+        document.getElementById('res-group-name').textContent = currentUser.groupName;
+        document.getElementById('res-correct-breakdown').textContent = `${quizCorrectCount} correct (+${accuracyBonus} pts)`;
+        document.getElementById('res-mult-applied').textContent = `${mult}×`;
+        document.getElementById('res-time-applied').textContent = formatSeconds(quizTimerSeconds);
+        document.getElementById('res-final-points').textContent = `${totalScore} pts`;
+
+        // Update local user object
+        currentUser.scores = currentUser.scores || {};
+        currentUser.scores[`Day${activeDay}`] = totalScore;
+        currentUser.totalPoints = (currentUser.totalPoints || 0) + totalScore;
+        currentUser.totalTimeSeconds = (currentUser.totalTimeSeconds || 0) + quizTimerSeconds;
+        if (activeDay > (currentUser.lastCompletedDay || 0)) {
+          currentUser.lastCompletedDay = activeDay;
+        }
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+
+        // Submit to Google Sheets via GAS
+        if (isRunningInGas) {
+          callGas('submitQuizScore', [currentUser.staffId, activeDay, totalScore, quizCorrectCount, quizTimerSeconds], (res) => {
+            if (res && res.leaderboard) {
+              leaderboardData = res.leaderboard;
+            }
+          });
+        }
+      }
+
+      document.getElementById('btn-finish-return').addEventListener('click', openDashboard);
+
+      // Fallback questions if sheet is empty or in local testing
+      function getFallbackQuestions(day) {
+        return [
+          { question: `What is the top operational safety priority during shift start?`, options: ['Complete pre-shift inspection checklist', 'Skip vehicle check to save time', 'Check phone messages', 'Disable alarm buzzer'], correctAnswer: 'Complete pre-shift inspection checklist' },
+          { question: `When a malfunction indicator turns amber, what is the standard action?`, options: ['Report immediately to operations supervisor', 'Ignore until end of week', 'Turn off the light bulb', 'Accelerate speed'], correctAnswer: 'Report immediately to operations supervisor' },
+          { question: `What is the primary factor in breaking ties when two staff have equal points?`, options: ['Lower total completion time', 'Higher employee badge number', 'Alphabetical by name', 'Coin flip'], correctAnswer: 'Lower total completion time' },
+          { question: `How many teams are staff equally drafted into across the challenge?`, options: ['10 Groups', '2 Groups', '5 Groups', '15 Groups'], correctAnswer: '10 Groups' },
+          { question: `What multiplier is applied during the high-stakes Days 8 to 10?`, options: ['4× Super Multiplier', '1× Standard', '2× Double', '3× Triple'], correctAnswer: '4× Super Multiplier' }
+        ];
+      }
+
+      // --- INITIALIZE ON PAGE LOAD ---
+      function init() {
+        setupRegistration();
+
+        // Check if user already registered on this device
+        const stored = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+        if (stored) {
+          try {
+            currentUser = JSON.parse(stored);
+            openDashboard();
+            return;
+          } catch (e) {}
+        }
+
+        showPage('page-registration');
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

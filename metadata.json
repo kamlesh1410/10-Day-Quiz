@@ -1,0 +1,7 @@
+{
+  "name": "SOP Quiz Challenge - 10-Day Operational Excellence",
+  "description": "Responsive SPA for a 10-day general knowledge and standard operating procedure quiz challenge with Google Apps Script backend, group leaderboards, and tiered multipliers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

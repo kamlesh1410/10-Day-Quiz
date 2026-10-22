@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOP Quiz Challenge - 10 Days of Operational Excellence</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+  <!-- ========================================== -->
+  <!-- PAGE 1: STAFF REGISTRATION                 -->
+  <!-- ========================================== -->
+  <div id="page-registration" class="min-h-screen flex flex-col justify-between">
+    <header class="border-b border-slate-800 bg-slate-900/90 px-6 py-4">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg border border-emerald-500/30">10D</div>
+          <div>
+            <h1 class="text-base font-bold text-white leading-tight">SOP Quiz Challenge</h1>
+            <p class="text-xs text-slate-400">10 Days of Operational Excellence</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center p-6">
+      <div class="w-full max-w-lg bg-slate-800/80 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur">
+        <div class="mb-6">
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+            Page 1 · Staff Registration
+          </span>
+          <h2 class="text-2xl font-black text-white mt-3">Join the 10-Day Challenge</h2>
+          <p class="text-xs text-slate-400 mt-1">Select an avatar and enter your credentials. You will be assigned to one of the 10 operational teams.</p>
+        </div>
+
+        <form id="registration-form" class="space-y-5">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">1. Select Avatar (6 Profiles)</label>
+            <div id="avatar-grid" class="grid grid-cols-3 gap-2.5"></div>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">2. Staff / Driver ID</label>
+              <input id="reg-staff-id" type="text" placeholder="e.g. DRV-1051" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white font-mono focus:border-emerald-400 focus:outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">3. Full Name</label>
+              <input id="reg-staff-name" type="text" placeholder="e.g. Jordan Blake" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:border-emerald-400 focus:outline-none" />
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 cursor-pointer">
+            Submit & Register to Challenge →
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="p-4 text-center text-xs text-slate-500 border-t border-slate-800">
+      50 Drivers · 10 Groups of 5 · Google Sheets & Apps Script Architecture
+    </footer>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- PAGE 2: DASHBOARD & LEADERBOARD HUB       -->
+  <!-- ========================================== -->
+  <div id="page-dashboard" class="hidden min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/95 px-6 py-3.5">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="user-avatar-display" class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xl">👨‍✈️</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="user-name-display" class="text-sm sm:text-base font-bold text-white">Driver Name</h2>
+              <span id="user-staffid-display" class="text-xs font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">DRV-1001</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-0.5">
+              <span id="user-group-display" class="text-emerald-400 font-medium">Group Alpha</span>
+              <span>·</span>
+              <strong id="user-points-display" class="text-white font-mono">0</strong> pts total
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-sign-out" class="text-xs text-slate-400 hover:text-rose-400 px-3 py-1.5 rounded border border-slate-800 hover:border-slate-700">
+          Switch User
+        </button>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
+      <!-- Challenge & Timer Banner -->
+      <section class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex items-center gap-2">
+              <span id="dash-day-badge" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/30">Day 1 of 10 Challenge</span>
+              <span id="dash-multiplier-badge" class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-700 text-slate-200">1x Multiplier Active</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-white">Daily SOP Quiz Window</h1>
+            <p id="dash-multiplier-desc" class="text-xs text-slate-400">100 pt baseline + 100 pt accuracy bonus × multiplier.</p>
+
+            <!-- Day Selector -->
+            <div class="pt-2">
+              <span class="text-[11px] uppercase tracking-wider font-semibold text-slate-400 block mb-1.5">Select Day:</span>
+              <div id="dash-day-selector" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-slate-900/60 p-5 rounded-xl border border-slate-700 space-y-4 text-center lg:text-right">
+            <div>
+              <span class="text-xs text-slate-400 block mb-1">Window Closes at 23:59:</span>
+              <div id="daily-countdown-timer" class="font-mono text-3xl font-extrabold text-amber-400 tracking-wider">
+                --:--:--
+              </div>
+            </div>
+            <div id="dash-quiz-action"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Leaderboards -->
+      <section class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+          <div>
+            <h3 class="text-lg font-bold text-white">Challenge Leaderboard Hub</h3>
+            <p class="text-xs text-slate-400">Individual & 10 Group standings</p>
+          </div>
+          <div class="flex items-center gap-1 p-1 bg-slate-900 rounded-lg border border-slate-700">
+            <button id="tab-btn-individual" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-500 text-slate-950">Individual Top 10</button>
+            <button id="tab-btn-group" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white">All 10 Groups</button>
+          </div>
+        </div>
+
+        <!-- Individual Table -->
+        <div id="leaderboard-individual" class="mt-4 overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-700">
+              <tr>
+                <th class="py-2.5 px-4">Rank</th>
+                <th class="py-2.5 px-4">Driver</th>
+                <th class="py-2.5 px-4">Group</th>
+                <th class="py-2.5 px-4 text-center">Days Done</th>
+                <th class="py-2.5 px-4 text-right">Total Points</th>
+              </tr>
+            </thead>
+            <tbody id="individual-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Group Grid -->
+        <div id="leaderboard-group" class="hidden mt-4">
+          <div id="group-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- PAGE 3: INTERACTIVE QUIZ ENGINE           -->
+  <!-- ========================================== -->
+  <div id="page-quiz" class="hidden min-h-screen flex flex-col justify-between">
+    <!-- Quiz Header -->
+    <header class="border-b border-slate-800 bg-slate-900/95 px-6 py-4">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="quiz-header-day" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/30">Day 1</span>
+          <span id="quiz-header-multiplier" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/30">1x Multiplier</span>
+        </div>
+        <button id="btn-exit-quiz" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded border border-slate-800">Exit</button>
+      </div>
+    </header>
+
+    <!-- Quiz Question Arena -->
+    <main class="flex-1 flex items-center justify-center p-6">
+      <!-- In Progress State -->
+      <div id="quiz-in-progress-view" class="w-full max-w-2xl bg-slate-800/90 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <span id="quiz-question-counter" class="text-xs font-bold text-slate-400 uppercase">Question 1 of 5</span>
+          <span class="text-xs text-emerald-400 font-mono">100 pts per correct answer</span>
+        </div>
+
+        <h2 id="quiz-question-text" class="text-xl sm:text-2xl font-black text-white leading-snug mb-6">Question prompt here</h2>
+
+        <div id="quiz-options-container" class="space-y-3"></div>
+
+        <div id="quiz-feedback-banner" class="hidden mt-6 pt-5 border-t border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div id="quiz-feedback-msg" class="text-sm"></div>
+          <button id="btn-next-question" class="w-full sm:w-auto px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs tracking-wide cursor-pointer">
+            Next Question →
+          </button>
+        </div>
+      </div>
+
+      <!-- Completion View State -->
+      <div id="quiz-completion-view" class="hidden w-full max-w-xl bg-slate-800/90 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+        <div>
+          <div class="text-4xl mb-2">🏆</div>
+          <h2 class="text-2xl font-black text-white">Daily Quiz Completed!</h2>
+          <p class="text-xs text-slate-400 mt-1">Here is your score breakdown:</p>
+        </div>
+
+        <div class="bg-slate-950 p-6 rounded-xl border border-slate-700">
+          <span class="text-xs uppercase text-slate-400">Total Points Earned Today</span>
+          <div id="comp-total-score" class="text-4xl font-mono font-black text-emerald-400 my-2">+600 pts</div>
+          <div class="text-xs text-indigo-300">Credited to <strong id="comp-group-name">Group Alpha</strong></div>
+        </div>
+
+        <div class="text-left text-xs bg-slate-900/60 p-4 rounded-xl space-y-2 text-slate-300">
+          <div class="flex justify-between"><span>Base Baseline:</span><span class="font-mono text-white">+100 pts</span></div>
+          <div class="flex justify-between"><span>Accuracy:</span><span id="comp-correct-count" class="font-mono text-white">5 correct (+500 pts)</span></div>
+          <div class="flex justify-between text-amber-400 font-bold"><span>Active Multiplier:</span><span id="comp-multiplier-applied" class="font-mono">1×</span></div>
+          <div class="flex justify-between text-emerald-400 font-bold pt-2 border-t border-slate-800 text-sm">
+            <span>Final Credited:</span><span id="comp-final-score" class="font-mono">600 pts</span>
+          </div>
+        </div>
+
+        <button id="btn-return-dashboard" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-sm transition-all cursor-pointer">
+          Return to Dashboard & Update Standings →
+        </button>
+      </div>
+    </main>
+
+    <footer class="p-3 text-center text-xs text-slate-500 border-t border-slate-800">
+      10-Day SOP Quiz Challenge · Single Page Application
+    </footer>
+  </div>
+
+  <!-- Link app.js -->
+  <script src="./app.js"></script>
+</body>
+</html>
