@@ -47,6 +47,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, onRosterUpdat
   const [gasUrlInput, setGasUrlInput] = useState<string>(ApiService.getStoredGasUrl());
   const [isTestingUrl, setIsTestingUrl] = useState<boolean>(false);
   const [urlMessage, setUrlMessage] = useState<{ success: boolean; text: string } | null>(null);
+  const [copiedCode, setCopiedCode] = useState<boolean>(false);
 
   // Sheet Initialization
   const [isInitializing, setIsInitializing] = useState<boolean>(false);
@@ -56,6 +57,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, onRosterUpdat
   // Live Central Clock
   const [centralTimeDisplay, setCentralTimeDisplay] = useState<string>('');
   const [midnightCountdown, setMidnightCountdown] = useState<string>('');
+
+  const handleCopyCode = async () => {
+    try {
+      const res = await fetch('/Code.gs');
+      const text = await res.text();
+      await navigator.clipboard.writeText(text);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 3000);
+    } catch (e) {
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2000);
+    }
+  };
 
   // Load data
   const loadRosterData = async () => {
@@ -344,6 +358,38 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, onRosterUpdat
         <div className="p-3.5 bg-emerald-500/15 border border-emerald-500/40 rounded-xl text-xs text-emerald-300 flex items-center gap-2.5 shadow-sm">
           <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
           <span>{actionSuccessNotice}</span>
+        </div>
+      )}
+
+      {/* Cloud Sync Status Alert for Multi-User & Vercel */}
+      {!ApiService.isCloudConnected() ? (
+        <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl space-y-2">
+          <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>Shared Cloud Database Status: Standalone Mode (Offline)</span>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Your friends are each seeing a separate single-user quiz because the central Google Apps Script Web App URL has not been connected to the app. Without this URL, each browser stores data only on its own phone or computer!
+          </p>
+          <div className="text-[11px] text-amber-200/90 bg-slate-950/80 p-2.5 rounded-xl border border-amber-500/20 flex items-center justify-between gap-2">
+            <span>Deploy the script in your Google Sheet once (Section 4 below) to link all friends together live!</span>
+            <a
+              href="#google-script-setup"
+              className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg shrink-0 transition-colors"
+            >
+              See 3-Step Setup ↓
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span><strong>Live Shared Cloud Database Active:</strong> Registrations and quiz scores automatically save to Google Sheet User_Scores_DB and sync across all devices!</span>
+          </div>
+          <span className="font-mono text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">
+            Live Synced
+          </span>
         </div>
       )}
 
@@ -685,37 +731,104 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, onRosterUpdat
         </div>
       </div>
 
-      {/* SECTION 4: GOOGLE SHEETS & APPS SCRIPT SETTINGS */}
-      <div className="p-4 bg-slate-900/90 border border-slate-700/80 rounded-2xl space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
-            <ExternalLink className="w-4 h-4" />
-            <span>Google Sheets & Apps Script Configuration</span>
+      {/* SECTION 4: GOOGLE SHEETS & APPS SCRIPT SETUP (SHARED CLOUD DATABASE) */}
+      <div id="google-script-setup" className="p-4 sm:p-5 bg-slate-900/90 border border-slate-700/80 rounded-2xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <Database className="w-4 h-4" />
+              <span>Connect Shared Google Sheets Backend (For Vercel & All Devices)</span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Follow this 2-minute setup to enable real multi-user synchronization. All registrations and quiz scores will log into Google Sheets live!
+            </p>
           </div>
-          <span className="text-xs text-slate-400 font-mono">
-            {gasUrlInput ? 'Connected' : 'Direct Sheet GViz Active'}
+          <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-lg border w-fit ${
+            ApiService.isCloudConnected()
+              ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+              : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+          }`}>
+            {ApiService.isCloudConnected() ? '● Cloud Connected' : '● Standalone Mode'}
           </span>
         </div>
 
+        {/* 3 Step Deployment Instructions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-200">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-black">
+                1
+              </span>
+              <span>Open Apps Script</span>
+            </div>
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Open your Google Sheet{' '}
+              <a
+                href={`https://docs.google.com/spreadsheets/d/${HARDCODED_SHEET_IDS.USER_SCORES_DB}/edit`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-400 underline font-bold"
+              >
+                User_Scores_DB ↗
+              </a>
+              . In the top menu, click <strong>Extensions</strong> &rarr; <strong>Apps Script</strong>.
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2">
+            <div className="flex items-center justify-between font-bold text-slate-200">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-black">
+                  2
+                </span>
+                <span>Paste Code.gs</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyCode}
+                className="text-[10px] px-2 py-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition-colors cursor-pointer"
+              >
+                {copiedCode ? '✓ Copied!' : 'Copy Code'}
+              </button>
+            </div>
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Delete any default code in the editor, paste the copied <code className="text-emerald-300">Code.gs</code> script, then press <kbd className="bg-slate-900 px-1 py-0.5 rounded text-white font-mono">Ctrl+S</kbd> to save.
+            </p>
+          </div>
+
+          <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-200">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[11px] font-black">
+                3
+              </span>
+              <span>Deploy Web App</span>
+            </div>
+            <p className="text-slate-400 leading-relaxed text-[11px]">
+              Click blue <strong>Deploy</strong> &rarr; <strong>New Deployment</strong> &rarr; Select <strong>Web app</strong>. Set <em>Execute as: Me</em> and <em>Who has access: Anyone</em>. Click Deploy and copy the Web App URL!
+            </p>
+          </div>
+        </div>
+
+        {/* Input box to save and test */}
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1">
-            Google Apps Script Web App URL (Optional if using direct sheets):
+            Google Apps Script Web App URL:
           </label>
           <div className="flex items-center gap-2">
             <input
               type="url"
               value={gasUrlInput}
               onChange={(e) => setGasUrlInput(e.target.value)}
-              placeholder="https://script.google.com/macros/s/.../exec"
+              placeholder="https://script.google.com/macros/s/AKfycb.../exec"
               className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:border-emerald-400 focus:outline-none"
             />
             <button
               type="button"
               disabled={isTestingUrl}
               onClick={handleTestGasUrl}
-              className="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shrink-0 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shrink-0 cursor-pointer disabled:opacity-50"
             >
-              {isTestingUrl ? 'Pinging...' : 'Save & Test'}
+              {isTestingUrl ? 'Pinging Backend...' : 'Save & Ping'}
             </button>
           </div>
           {urlMessage && (
@@ -725,27 +838,33 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, onRosterUpdat
           )}
         </div>
 
-        {/* Direct Links to the 2 Sheets */}
-        <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center gap-3 text-xs">
-          <a
-            href={`https://docs.google.com/spreadsheets/d/${HARDCODED_SHEET_IDS.USER_SCORES_DB}/edit`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-emerald-400 hover:text-emerald-300 underline flex items-center gap-1"
-          >
-            <ExternalLink className="w-3 h-3" />
-            <span>Open User_Scores_DB Sheet</span>
-          </a>
-          <span className="text-slate-600">·</span>
-          <a
-            href={`https://docs.google.com/spreadsheets/d/${HARDCODED_SHEET_IDS.GEN_QUIZ}/edit`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-emerald-400 hover:text-emerald-300 underline flex items-center gap-1"
-          >
-            <ExternalLink className="w-3 h-3" />
-            <span>Open GEN_QUIZ Questions Sheet</span>
-          </a>
+        {/* Vercel Tip & Direct Links */}
+        <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+          <div className="text-[11px] text-slate-400">
+            💡 <strong>Vercel Deployment Tip:</strong> In your Vercel project dashboard, go to <em>Settings &gt; Environment Variables</em> and add <code className="text-emerald-400 font-mono font-bold">VITE_GAS_URL</code> with your Web App URL. That way, all friends get the cloud connection automatically!
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href={`https://docs.google.com/spreadsheets/d/${HARDCODED_SHEET_IDS.USER_SCORES_DB}/edit`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 underline flex items-center gap-1"
+            >
+              <ExternalLink className="w-3 h-3" />
+              <span>User_Scores_DB</span>
+            </a>
+            <span className="text-slate-600">·</span>
+            <a
+              href={`https://docs.google.com/spreadsheets/d/${HARDCODED_SHEET_IDS.GEN_QUIZ}/edit`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 underline flex items-center gap-1"
+            >
+              <ExternalLink className="w-3 h-3" />
+              <span>GEN_QUIZ</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

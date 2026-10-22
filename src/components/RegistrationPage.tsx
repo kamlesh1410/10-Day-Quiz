@@ -95,6 +95,17 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            <span
+              className={`text-[11px] font-mono px-2 py-0.5 rounded border flex items-center gap-1.5 ${
+                ApiService.isCloudConnected()
+                  ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${ApiService.isCloudConnected() ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+              <span className="hidden sm:inline">{ApiService.isCloudConnected() ? 'Google Sheets: Synced' : 'Cloud Sync: Standalone Mode'}</span>
+            </span>
+
             <button
               type="button"
               onClick={() => {
@@ -107,6 +118,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               <Settings className="w-3.5 h-3.5 text-emerald-400" />
               <span className="hidden sm:inline">Admin Tab</span>
             </button>
+
             <div className="flex items-center gap-2 text-xs text-slate-400 ml-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span className="text-slate-300">Staff Portal</span>

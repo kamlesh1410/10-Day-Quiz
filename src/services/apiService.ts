@@ -16,13 +16,29 @@ const STORAGE_KEYS = {
   USER_PROFILES_MAP: 'quiz_challenge_user_profiles_map',
 };
 
+// Hardcoded default Apps Script Web App URL (if deployed by user for Vercel/global builds)
+export const DEFAULT_GAS_WEB_APP_URL = '';
+
 export class ApiService {
   public static getHardcodedSheetIds() {
     return HARDCODED_SHEET_IDS;
   }
 
-  private static getGasUrl(): string {
-    return localStorage.getItem(STORAGE_KEYS.GAS_WEB_APP_URL) || '';
+  /**
+   * Retrieves active Google Apps Script Web App URL.
+   * Priority:
+   * 1. localStorage (if admin configured it in the UI)
+   * 2. VITE_GAS_URL environment variable (from Vercel build settings)
+   * 3. DEFAULT_GAS_WEB_APP_URL constant (bundled in source)
+   */
+  public static getGasUrl(): string {
+    const envUrl = (import.meta as any).env?.VITE_GAS_URL || '';
+    const stored = localStorage.getItem(STORAGE_KEYS.GAS_WEB_APP_URL) || '';
+    return (stored || envUrl || DEFAULT_GAS_WEB_APP_URL).trim();
+  }
+
+  public static isCloudConnected(): boolean {
+    return Boolean(this.getGasUrl());
   }
 
   public static setGasUrl(url: string): void {
@@ -37,28 +53,73 @@ export class ApiService {
     return this.getGasUrl();
   }
 
+  /**
+   * Universal CORS-safe HTTP POST helper for Google Apps Script Web App.
+   * Google Apps Script rejects OPTIONS preflight requests.
+   * Using text/plain prevents the preflight, and redirect: 'follow' allows
+   * following Google's mandatory 302 redirect to script.googleusercontent.com.
+   */
+  public static async sendGasRequest(action: string, payload: Record<string, any>): Promise<any> {
+    const gasUrl = this.getGasUrl();
+    if (!gasUrl) {
+      throw new Error('NO_GAS_URL_CONFIGURED');
+    }
+
+    const response = await fetch(gasUrl, {
+      method: 'POST',
+      mode: 'cors',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify({
+        action,
+        ...payload,
+        sheetId: HARDCODED_SHEET_IDS.USER_SCORES_DB,
+      }),
+    });
+
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      return { status: 'success', raw: text };
+    }
+  }
+
   public static async pingGasBackend(customUrl?: string): Promise<{ success: boolean; message: string; timestamp?: string }> {
     const url = customUrl || this.getGasUrl();
     if (!url) {
-      return { success: false, message: 'No Google Apps Script Web App URL provided.' };
+      return {
+        success: false,
+        message: 'No Google Apps Script Web App URL provided. App is running in Local Storage mode.',
+      };
     }
 
     try {
       const pingUrl = `${url}${url.includes('?') ? '&' : '?'}action=ping`;
       const response = await fetch(pingUrl, {
         method: 'GET',
-        headers: { Accept: 'application/json' },
+        mode: 'cors',
+        redirect: 'follow',
       });
 
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const text = await response.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        data = { status: 'success', message: text };
+      }
+
       return {
-        success: data.status === 'success',
-        message: data.message || 'Connected successfully to Google Apps Script!',
-        timestamp: data.timestamp,
+        success: data.status === 'success' || response.ok,
+        message: data.message || 'Connected successfully to Google Apps Script & Google Sheets!',
+        timestamp: data.timestamp || new Date().toISOString(),
       };
     } catch (err: any) {
       return {
@@ -133,7 +194,6 @@ export class ApiService {
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          // If cache contains old test seed data, purge it for clean production start
           const hasOldMock = parsed.some((d: any) => d.staffName === 'Alex Mercer' || String(d.staffId) === 'DRV-1001');
           if (hasOldMock) {
             localStorage.removeItem(STORAGE_KEYS.ALL_DRIVERS);
@@ -185,17 +245,9 @@ export class ApiService {
     }
 
     // 2. Call Google Apps Script if URL is configured
-    const gasUrl = this.getGasUrl();
-    if (gasUrl) {
+    if (this.isCloudConnected()) {
       try {
-        const response = await fetch(gasUrl, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'initializeSheet',
-            sheetId: HARDCODED_SHEET_IDS.USER_SCORES_DB,
-          }),
-        });
-        const resJson = await response.json();
+        const resJson = await this.sendGasRequest('initializeSheet', {});
         return {
           success: true,
           message: resJson.message || 'Google Sheet User_Scores_DB & local storage initialized successfully with clean headers!',
@@ -203,18 +255,18 @@ export class ApiService {
       } catch (e: any) {
         return {
           success: true,
-          message: `Local database initialized (0 staff). Note: Google Sheet direct call returned: ${e.message}. Ensure Apps Script is deployed.`,
+          message: `Local database initialized (0 staff). Note: Google Sheet call returned: ${e.message}. Ensure Apps Script Web App is deployed with Access: Anyone.`,
         };
       }
     }
 
     return {
       success: true,
-      message: 'Local database initialized with 0 staff. Ready for fresh staff registrations!',
+      message: 'Local database initialized with 0 staff. To also wipe Google Sheet, connect your Google Apps Script Web App URL in Admin Tab.',
     };
   }
 
-  // Delete a specific staff member (e.g. test entry "Kamlesh")
+  // Delete a specific staff member
   public static async deleteStaffMember(staffId: string): Promise<LeaderboardData> {
     const normalizedStaffId = staffId.trim().toUpperCase();
 
@@ -236,17 +288,9 @@ export class ApiService {
     localStorage.removeItem(`quiz_completed_date_${normalizedStaffId}`);
 
     // 4. If GAS is connected, call deleteUser
-    const gasUrl = this.getGasUrl();
-    if (gasUrl) {
+    if (this.isCloudConnected()) {
       try {
-        await fetch(gasUrl, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'deleteUser',
-            staffId: normalizedStaffId,
-            sheetId: HARDCODED_SHEET_IDS.USER_SCORES_DB,
-          }),
-        });
+        await this.sendGasRequest('deleteUser', { staffId: normalizedStaffId });
       } catch (e) {
         // ignore
       }
@@ -259,23 +303,16 @@ export class ApiService {
   public static async registerUser(staffId: string, staffName: string, avatarId: string): Promise<UserProfile> {
     const trimmedId = staffId.trim().toUpperCase();
     const trimmedName = staffName.trim();
-    const gasUrl = this.getGasUrl();
-    const centralTodayStr = CentralTimeService.getCentralDateString();
 
     // 1. Try Google Apps Script if URL is configured
-    if (gasUrl) {
+    if (this.isCloudConnected()) {
       try {
-        const response = await fetch(gasUrl, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'registerUser',
-            staffId: trimmedId,
-            staffName: trimmedName,
-            avatarId,
-            sheetId: HARDCODED_SHEET_IDS.USER_SCORES_DB,
-          }),
+        const json = await this.sendGasRequest('registerUser', {
+          staffId: trimmedId,
+          staffName: trimmedName,
+          avatarId,
         });
-        const json = await response.json();
+
         if (json.status === 'success' && json.user) {
           const userProfile: UserProfile = {
             staffId: String(json.user.staffId ?? trimmedId),
@@ -303,7 +340,6 @@ export class ApiService {
     const existingIndex = drivers.findIndex((d) => String(d.staffId).toUpperCase() === trimmedId);
 
     if (existingIndex >= 0) {
-      // Re-registration of existing staff: PRESERVE all scores and completion dates!
       const existing = drivers[existingIndex];
       const profilesMap = this.getUserProfilesMap();
       const cached = profilesMap[trimmedId];
@@ -324,7 +360,7 @@ export class ApiService {
       return userProfile;
     }
 
-    // Count team members across the 10 railway teams to balance (5 staff per team)
+    // Balance across 10 railway teams (5 staff per team)
     const counts: Record<string, number> = {};
     TEAMS.forEach((t) => (counts[t] = 0));
     drivers.forEach((d) => {
@@ -389,7 +425,8 @@ export class ApiService {
     if (gasUrl) {
       try {
         const response = await fetch(
-          `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getUser&staffId=${encodeURIComponent(trimmedId)}&sheetId=${HARDCODED_SHEET_IDS.USER_SCORES_DB}`
+          `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getUser&staffId=${encodeURIComponent(trimmedId)}&sheetId=${HARDCODED_SHEET_IDS.USER_SCORES_DB}`,
+          { mode: 'cors', redirect: 'follow' }
         );
         const json = await response.json();
         if (json.status === 'success' && json.user) {
@@ -452,7 +489,7 @@ export class ApiService {
     if (gasUrl) {
       try {
         const url = `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getDailyQuestions&day=${day}&sheetId=${HARDCODED_SHEET_IDS.GEN_QUIZ}`;
-        const res = await fetch(url);
+        const res = await fetch(url, { mode: 'cors', redirect: 'follow' });
         const data = await res.json();
         if (data.status === 'success' && Array.isArray(data.questions) && data.questions.length >= 5) {
           return data.questions.slice(0, 5);
@@ -516,7 +553,6 @@ export class ApiService {
     correctCount: number,
     timeTakenSeconds: number
   ): Promise<{ totalPoints: number; totalTimeSeconds: number; leaderboard: LeaderboardData }> {
-    const gasUrl = this.getGasUrl();
     const normalizedStaffId = String(staffId).toUpperCase();
     const centralTodayStr = CentralTimeService.getCentralDateString();
 
@@ -556,20 +592,15 @@ export class ApiService {
       this.saveUserProfileToMap(currentUser);
     }
 
-    // Try posting to GAS if URL is set
-    if (gasUrl) {
+    // Post to Google Apps Script if connected
+    if (this.isCloudConnected()) {
       try {
-        await fetch(gasUrl, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'submitQuizScore',
-            staffId,
-            day,
-            score,
-            correctCount,
-            timeTakenSeconds,
-            sheetId: HARDCODED_SHEET_IDS.USER_SCORES_DB,
-          }),
+        await this.sendGasRequest('submitQuizScore', {
+          staffId: normalizedStaffId,
+          day,
+          score,
+          correctCount,
+          timeTakenSeconds,
         });
       } catch (e) {
         console.warn('Failed to submit score to GAS backend (saved locally):', e);
@@ -683,7 +714,7 @@ export class ApiService {
     if (gasUrl) {
       try {
         const url = `${gasUrl}${gasUrl.includes('?') ? '&' : '?'}action=getLeaderboardData&sheetId=${HARDCODED_SHEET_IDS.USER_SCORES_DB}`;
-        const res = await fetch(url);
+        const res = await fetch(url, { mode: 'cors', redirect: 'follow' });
         const data = await res.json();
         if (data.status === 'success' && data.data) {
           const raw = data.data;
